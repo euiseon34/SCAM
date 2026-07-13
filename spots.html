@@ -48,26 +48,32 @@
     </main>
 
     <script>
-        // 기존 원본 소스코드의 8개 엄선 스폿 데이터 완전 복구
-        const ALL_SPOTS = [
+        const BASE_SPOTS = [
             { id: "spot1", title: "역삼문화공원 & 국기원 산책로", category: "walk", time: 10, address: "서울 강남구 테헤란로7길 32", direction: "멀티캠퍼스 역삼 ➡️ 국기원 고개 도보 10분", description: "싸피 서울캠퍼스에서 역삼역 언덕 방향으로 걸어 올라가면 만날 수 있는 울창한 숲속 공원입니다. 코딩으로 머리가 무거워졌을 때 식후 산책 코스로 최고입니다.", image: "https://images.unsplash.com/photo-1502082553048-f009c37129b9?auto=format&fit=crop&w=800&q=80" },
             { id: "spot2", title: "충현교회 외관 산책길", category: "walk", time: 10, address: "서울 강남구 테헤란로27길 40", direction: "멀티캠퍼스 역삼 ➡️ 학동로 방향 골목 도보 10분", description: "골목길을 걷다 보면 눈앞에 압도적인 비주얼로 나타나는 거대한 고딕풍 성당 형태의 건축물입니다. 차분하고 평화롭게 걸으며 리프레시할 수 있습니다.", image: "https://images.unsplash.com/photo-1478147427282-58a87a120781?auto=format&fit=crop&w=800&q=80" },
             { id: "spot3", title: "센터필드 조경 가로수길 & 아케이드", category: "walk", time: 5, address: "서울 강남구 테헤란로 231", direction: "멀티캠퍼스 역삼 ➡️ 르네상스 호텔 사거리 방향 도보 5분", description: "싸피 멀티캠퍼스 빌딩 바로 옆 블록에 위치한 웅장한 프리미엄 복합공간입니다. 덥거나 추운 혹한기에는 실내 아케이드에서 몰링 산책을 즐기기 좋습니다.", image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80" },
             { id: "spot4", title: "역삼동 북어집", category: "food", time: 6, address: "서울 강남구 논현로85길 5-14", direction: "멀티캠퍼스 역삼 ➡️ 역삼역 골목 도보 6분", description: "30년 넘은 찐 기사식당 바이브의 푸짐하고 매콤 달콤한 북어찜 백반집입니다. 회전율이 엄청나게 빨라 바쁜 싸피 점심시간에 제격입니다.", image: "https://images.unsplash.com/photo-1628840042765-356cda07504e?auto=format&fit=crop&w=800&q=80" },
             { id: "spot5", title: "지아니스나폴리 역삼본점", category: "food", time: 7, address: "서울 강남구 논현로94길 15", direction: "멀티캠퍼스 역삼 ➡️ 역삼역 7번 출구 방향 도보 7분", description: "오랫동안 미식가들의 사랑을 받고 있는 화덕 피자의 성지입니다. 쫀득하고 탄탄한 도우 식감이 일품이며, 빈티지하고 이국적인 인테리어가 특징입니다.", image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=800&q=80" },
-            { id: "spot6", title: "이도곰탕 본점", category: "food", time: 8, address: "서울 강남구 논현로94길 29-5", direction: "멀티캠퍼스 역삼 ➡️ 선릉 방향 골목 도보 8분", description: "속을 따뜻하고 깊게 덥혀주는 맑은 한우 곰탕 전문점입니다. 국물 한 숟가락 뜨자마자 알고리즘 테스트 스트레스가 확 씻겨 나갑니다.", image: "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=800&q=80" },
+            { id: "spot6", title: "이도곰탕 본점", category: "food", time: 8, address: "서울 강남구 논현로94길 29-5", direction: "멀티캠퍼스 역삼 ➡️선릉 방향 골목 도보 8분", description: "속을 따뜻하고 깊게 덥혀주는 맑은 한우 곰탕 전문점입니다. 국물 한 숟가락 뜨자마자 알고리즘 테스트 스트레스가 확 씻겨 나갑니다.", image: "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=800&q=80" },
             { id: "spot7", title: "대우부대찌개", category: "food", time: 10, address: "서울 강남구 테헤란로25길 34", direction: "멀티캠퍼스 역삼 ➡️ 역삼역 4번 출구 골목 도보 10분", description: "미나리를 산더미처럼 쌓아 한눈에 보기에도 싱그럽고 맛은 담백 시원합니다. 싸피 조원들과 대인원으로 푸짐하고 세련되게 점심을 먹고 싶을 때 강추합니다.", image: "https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?auto=format&fit=crop&w=800&q=80" },
             { id: "spot8", title: "파브리끄 역삼 GFC점", category: "food", time: 5, address: "서울 강남구 테헤란로 152 GFC 지하1층", direction: "멀티캠퍼스 역삼 ➡️ 역삼역 GFC 빌딩 지하 도보 5분", description: "커피 플래터 위에 흐트러지지 않는 달콤 밀도 가득한 생크림 아인슈페너 전문점입니다. 당 충전이 필요할 때 단번에 확실하게 해결해 줍니다.", image: "https://images.unsplash.com/photo-1517701604599-bb29b565090c?auto=format&fit=crop&w=800&q=80" }
         ];
 
+        let allSpots = [];
         let currentFilter = 'all';
         const spotsGrid = document.getElementById('spotsGrid');
         const spotsCountText = document.getElementById('spotsCount');
 
+        function initSpotsData() {
+            // 제보용 별도 저장소(ssafy_custom_spots)에서 목록만 안전하게 로드합니다.
+            const savedCustomData = JSON.parse(localStorage.getItem('ssafy_custom_spots')) || [];
+            allSpots = [...BASE_SPOTS, ...savedCustomData];
+            renderSpots();
+        }
+
         function renderSpots() {
             spotsGrid.innerHTML = '';
-            
-            const filtered = ALL_SPOTS.filter(spot => currentFilter === 'all' || spot.category === currentFilter);
+            const filtered = allSpots.filter(spot => currentFilter === 'all' || spot.category === currentFilter);
             spotsCountText.textContent = filtered.length;
 
             filtered.forEach(spot => {
@@ -77,6 +83,7 @@
                 const isWalk = spot.category === 'walk';
                 const tagClass = isWalk ? 'bg-blue-50 text-blue-500' : 'bg-amber-50 text-amber-500';
                 const tagLabel = isWalk ? '🌲 산책로' : '🍲 대표 맛집';
+                const isCustom = spot.id.startsWith('spot_custom_');
 
                 card.innerHTML = `
                     <div class="space-y-3">
@@ -87,7 +94,10 @@
                             <span class="text-xs px-2.5 py-0.5 rounded-full font-semibold ${tagClass}">${tagLabel}</span>
                             <span class="text-xs text-slate-400 font-medium">🕒 도보 ${spot.time}분</span>
                         </div>
-                        <h4 class="font-extrabold text-lg text-slate-800 dark:text-white">${spot.title}</h4>
+                        <h4 class="font-extrabold text-lg text-slate-800 dark:text-white flex items-center gap-1.5">
+                            ${isCustom ? '<span class="text-indigo-500 text-sm font-bold">⭐ 제보스폿</span>' : ''}
+                            <span>${spot.title}</span>
+                        </h4>
                         <p class="text-xs text-indigo-500 font-bold truncate">📍 ${spot.address}</p>
                         <p class="text-[11px] text-slate-400 leading-none">${spot.direction}</p>
                         <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed line-clamp-2">${spot.description}</p>
@@ -103,11 +113,8 @@
             });
         }
 
-        // 필터 변경 액션
         function filterCategory(category) {
             currentFilter = category;
-            
-            // 버튼 스타일 토글
             const buttons = ['btnFilterAll', 'btnFilterWalk', 'btnFilterFood'];
             buttons.forEach(id => {
                 const btn = document.getElementById(id);
@@ -117,28 +124,25 @@
                     btn.className = "px-4 py-2 bg-white dark:bg-darkCard text-slate-600 dark:text-slate-300 rounded-xl text-xs font-semibold border";
                 }
             });
-            
             renderSpots();
         }
 
-        // 플래너에 추가 기능 (로컬스토리지 동기화)
         function addToCourse(id) {
-            const spot = ALL_SPOTS.find(s => s.id === id);
+            const spot = allSpots.find(s => s.id === id);
             if (!spot) return;
 
             let course = JSON.parse(localStorage.getItem('ssafy_course')) || [];
             if (!course.some(item => item.id === spot.id)) {
                 course.push(spot);
                 localStorage.setItem('ssafy_course', JSON.stringify(course));
-                alert(`"${spot.title}"을(를) 코스 메이커에 담았습니다!`);
+                alert(`"${spot.title}"을(를) 코스 메이커에 담았습니다! [코스 플래너] 페이지에서 조립해 보세요.`);
             } else {
                 alert("이미 코스 플래너에 등록되어 있는 장소입니다.");
             }
         }
 
         document.getElementById('themeToggle').onclick = () => document.documentElement.classList.toggle('dark');
-        
-        window.onload = renderSpots;
+        window.onload = initSpotsData;
     </script>
 </body>
 </html>

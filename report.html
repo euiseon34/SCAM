@@ -25,7 +25,7 @@
                 <a href="planner.html" class="text-slate-600 hover:text-primary-500 dark:text-slate-300 transition-colors">🧳 코스 플래너</a>
                 <a href="report.html" class="text-primary-500 font-bold">➕ 장소 제보</a>
             </nav>
-            <button id="themeToggle" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-sm">🌓</button>
+            <button id="themeToggle" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-sm">🌓 모드 전환</button>
         </div>
     </header>
 
@@ -33,45 +33,103 @@
         <div class="space-y-1">
             <span class="px-2.5 py-0.5 bg-indigo-100 text-indigo-600 text-xs font-semibold rounded-full dark:bg-indigo-950/40">Spot Contributor</span>
             <h2 class="text-2xl font-bold tracking-tight">나만의 숨은 꿀장소 제보하기</h2>
-            <p class="text-slate-400 text-xs">정밀 주소 검색 또는 지도 위 직접 클릭 방식으로 편리하게 추가해 주세요.</p>
+            <p class="text-slate-400 text-xs">내가 아는 역삼동 꿀스폿을 등록하면 전체 스폿 목록에 즉시 추가되어 동기들과 공유할 수 있습니다.</p>
         </div>
 
-        <form onsubmit="alert('제보가 완료되었습니다!');" class="bg-white dark:bg-darkCard rounded-2xl border border-slate-200 dark:border-slate-800 p-6 space-y-4 shadow-sm">
+        <form id="reportForm" onsubmit="submitForm(event)" class="bg-white dark:bg-darkCard rounded-2xl border border-slate-200 dark:border-slate-800 p-6 space-y-4 shadow-sm">
             <div class="space-y-2">
-                <label class="block text-xs font-bold">📍 주소 검색</label>
+                <label class="block text-xs font-bold">📍 상세 주소 *</label>
                 <div class="flex gap-2">
-                    <input type="text" placeholder="예: 역삼동 737 혹은 강남구 테헤란로 152" class="flex-grow px-3 py-2 text-sm bg-slate-50 dark:bg-slate-900 border rounded-xl focus:outline-none">
-                    <button type="button" class="px-4 py-2 bg-primary-500 text-white rounded-xl text-xs font-semibold whitespace-nowrap">주소 검색</button>
+                    <input id="spotAddress" type="text" required placeholder="예: 역삼동 738-2 또는 강남구 테헤란로 212" class="flex-grow px-3 py-2 text-sm bg-slate-50 dark:bg-slate-900 border rounded-xl focus:outline-none dark:text-white">
                 </div>
             </div>
 
             <div class="grid grid-cols-2 gap-4">
                 <div>
                     <label class="block text-xs font-bold mb-1">장소 이름 *</label>
-                    <input type="text" required placeholder="예: 구름정원 카페" class="w-full px-3 py-2 text-sm bg-slate-50 dark:bg-slate-900 border rounded-xl focus:outline-none">
+                    <input id="spotTitle" type="text" required placeholder="예: 구름정원 카페" class="w-full px-3 py-2 text-sm bg-slate-50 dark:bg-slate-900 border rounded-xl focus:outline-none dark:text-white">
                 </div>
                 <div>
                     <label class="block text-xs font-bold mb-1">카테고리 *</label>
-                    <select required class="w-full px-3 py-2 text-sm bg-slate-50 dark:bg-slate-900 border rounded-xl focus:outline-none">
+                    <select id="spotCategory" required class="w-full px-3 py-2 text-sm bg-slate-50 dark:bg-slate-900 border rounded-xl focus:outline-none dark:text-white">
                         <option value="walk">🌲 숲 & 산책로</option>
                         <option value="food">🍲 로컬 맛집</option>
                     </select>
                 </div>
             </div>
 
-            <div>
-                <label class="block text-xs font-bold mb-1">장소 한 줄 매력 (핵심 하이라이트) *</label>
-                <input type="text" required placeholder="예: 참나무 화덕에서 바로 구워 도우가 환상적인 맛" class="w-full px-3 py-2 text-sm bg-slate-50 dark:bg-slate-900 border rounded-xl focus:outline-none">
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-bold mb-1">도보 시간 (분) *</label>
+                    <input id="spotTime" type="number" min="1" max="30" required placeholder="예: 7" class="w-full px-3 py-2 text-sm bg-slate-50 dark:bg-slate-900 border rounded-xl focus:outline-none dark:text-white">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold mb-1">길 안내 가이드 *</label>
+                    <input id="spotDirection" type="text" required placeholder="예: 멀티캠퍼스 정문 기준 도보 5분" class="w-full px-3 py-2 text-sm bg-slate-50 dark:bg-slate-900 border rounded-xl focus:outline-none dark:text-white">
+                </div>
             </div>
 
-            <div class="flex justify-end gap-2 pt-2 border-t">
-                <button type="button" onclick="history.back();" class="px-4 py-2.5 text-xs font-semibold text-slate-500">취소</button>
+            <div>
+                <label class="block text-xs font-bold mb-1">한 줄 매력 (핵심 하이라이트) *</label>
+                <input id="spotHighlight" type="text" required placeholder="예: 달콤하고 쫀쫀한 인생 얼그레이 크림 슈페너 맛집" class="w-full px-3 py-2 text-sm bg-slate-50 dark:bg-slate-900 border rounded-xl focus:outline-none dark:text-white">
+            </div>
+
+            <div>
+                <label class="block text-xs font-bold mb-1">장소 상세 설명 *</label>
+                <textarea id="spotDesc" required rows="3" placeholder="싸피 동기들이 코딩 스트레스를 풀기 위해 방문할 때 도움이 되는 명확한 매력을 적어주세요." class="w-full px-3 py-2 text-sm bg-slate-50 dark:bg-slate-900 border rounded-xl focus:outline-none dark:text-white"></textarea>
+            </div>
+
+            <div class="flex justify-end gap-2 pt-2 border-t dark:border-slate-800">
+                <button type="button" onclick="location.href='index.html';" class="px-4 py-2.5 text-xs font-semibold text-slate-500">취소</button>
                 <button type="submit" class="px-5 py-2.5 bg-primary-500 text-white text-xs font-bold rounded-xl shadow-md">제보 등록 완료</button>
             </div>
         </form>
     </main>
 
     <script>
+        function submitForm(e) {
+            e.preventDefault();
+
+            const title = document.getElementById('spotTitle').value.trim();
+            const category = document.getElementById('spotCategory').value;
+            const time = parseInt(document.getElementById('spotTime').value);
+            const address = document.getElementById('spotAddress').value.trim();
+            const direction = document.getElementById('spotDirection').value.trim();
+            const highlight = document.getElementById('spotHighlight').value.trim();
+            const description = document.getElementById('spotDesc').value.trim();
+
+            const lat = 37.5012746 + (Math.random() - 0.5) * 0.005;
+            const lng = 127.0395857 + (Math.random() - 0.5) * 0.005;
+
+            const customSpotId = `spot_custom_${Date.now()}`;
+            const newSpot = {
+                id: customSpotId,
+                title: title,
+                category: category,
+                time: time,
+                address: address,
+                direction: direction,
+                highlight: highlight,
+                description: description,
+                tip: "싸피 메이트가 직접 발로 뛰어 발굴한 소중한 로컬 정보입니다.",
+                image: category === 'walk' 
+                    ? "https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=800&q=80"
+                    : "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=800&q=80",
+                lat: lat,
+                lng: lng
+            };
+
+            // 중요: 플래너(ssafy_course)가 아닌 전체 스폿 보관소(ssafy_custom_spots)에만 따로 저장합니다.
+            let customSpots = JSON.parse(localStorage.getItem('ssafy_custom_spots')) || [];
+            customSpots.push(newSpot);
+            localStorage.setItem('ssafy_custom_spots', JSON.stringify(customSpots));
+
+            alert(`🎉 장소 "${title}" 제보가 완료되었습니다!\n[전체 스폿] 목록에 즉시 반영되었습니다.`);
+            
+            // 등록 완료 후 전체 스폿 리스트 화면으로 이동합니다.
+            location.href = "spots.html";
+        }
+
         document.getElementById('themeToggle').onclick = () => document.documentElement.classList.toggle('dark');
     </script>
 </body>
