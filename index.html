@@ -65,7 +65,7 @@
                 <a href="planner.html" class="text-slate-600 hover:text-primary-500 dark:text-slate-300 transition-colors">🧳 코스 플래너</a>
                 <a href="report.html" class="text-slate-600 hover:text-primary-500 dark:text-slate-300 transition-colors">➕ 장소 제보</a>
             </nav>
-            <div class="flex items-center space-x-2sm:space-x-4">
+            <div class="flex items-center space-x-2 sm:space-x-4">
                 <button id="themeToggle" class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300" aria-label="화면 모드 변경">🌓 모드 전환</button>
                 <button onclick="openAddSpotModal()" class="inline-flex items-center space-x-1.5 px-3.5 py-2 bg-indigo-50 hover:bg-indigo-100 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 rounded-xl text-sm font-semibold transition-all">
                     <span>➕ 팝업 제보</span>
@@ -218,10 +218,16 @@
         const SSAFY_COORD = [37.5012746, 127.0395857];
         const DEFAULT_API_KEY = "AIzaSyDc2CKJSsoyceRq08d8aPkdFfewcdTFAHM";
 
+        // 기존 원본 8대 장소 데이터 완전 복구 및 통합 유지
         const BASE_SPOTS = [
-            { id: "spot1", title: "역삼문화공원 & 국기원 산책로", category: "walk", time: 10, address: "서울 강남구 테헤란로7길 32", direction: "도보 10분", highlight: "맑은 피톤치드를 한껏 들이마시는 싸피의 비밀 힐링길", description: "코딩으로 머리가 무거워졌을 때 식후 산책하면서 정적을 느끼기 최고의 코스입니다.", lat: 37.502515, lng: 127.030391 },
-            { id: "spot2", title: "지아니스나폴리 역삼본점", category: "food", time: 7, address: "서울 강남구 논현로94길 15", direction: "도보 7분", highlight: "참나무 화덕에서 바로 구워 쫄깃쫄깃함의 끝을 달리는 원조 피자", description: "오랫동안 미식가들의 사랑을 받고 있는 화덕 피자의 성지입니다.", lat: 37.502240, lng: 127.036620 },
-            { id: "spot3", title: "파브리끄 역삼 GFC점", category: "food", time: 5, address: "서울 강남구 테헤란로 152 GFC 지하1층", direction: "도보 5분", highlight: "블루리본 서베이에 빛나는 수제 생크림 아인슈페너의 원조", description: "흐트러지지 않는 달콤 밀도 가득한 생크림 밸런스가 최고입니다.", lat: 37.500050, lng: 127.036520 }
+            { id: "spot1", title: "역삼문화공원 & 국기원 산책로", category: "walk", time: 10, address: "서울 강남구 테헤란로7길 32 (역삼동 635)", direction: "도보 10분", highlight: "맑은 피톤치드를 한껏 들이마시는 싸피의 비밀 힐링길", description: "코딩으로 머리가 무거워졌을 때 식후 산책하면서 정적을 느끼기 최고의 코스입니다.", lat: 37.502515, lng: 127.030391 },
+            { id: "spot2", title: "충현교회 외관 산책길", category: "walk", time: 10, address: "서울 강남구 테헤란로27길 40 (역삼동 665-1)", direction: "도보 10분", highlight: "도심 속 유럽 대성당에 온 듯 눈이 정화되는 웅장한 고딕풍 정원", description: "거대한 고딕풍 성당 형태의 건축물입니다. 차분하고 평화롭게 걸으며 리프레시할 수 있습니다.", lat: 37.506250, lng: 127.037580 },
+            { id: "spot3", title: "센터필드 조경 가로수길 & 아케이드", category: "walk", time: 5, address: "서울 강남구 테헤란로 231 (역삼동 676)", direction: "도보 5분", highlight: "비 오는 날, 궂은 날씨에 쾌적하게 걷는 최고의 럭셔리 실내 아케이드", description: "지하는 고급 레스토랑과 감성 인테리어의 실내 통로가 매력적입니다.", lat: 37.503920, lng: 127.042810 },
+            { id: "spot4", title: "역삼동 북어집", category: "food", time: 6, address: "서울 강남구 논현로85길 5-14 (역삼동 738-2)", direction: "도보 6분", highlight: "30년 넘은 찐 기사식당 바이브의 푸짐하고 매콤 달콤한 북어찜 백반", description: "회전율이 엄청나게 빨라 바쁜 싸피 점심시간에도 대기 없이 여유 시간을 가득 벌어주는 효자 맛집입니다.", lat: 37.497550, lng: 127.038120 },
+            { id: "spot5", title: "지아니스나폴리 역삼본점", category: "food", time: 7, address: "서울 강남구 논현로94길 15 (역삼동 668-20)", direction: "도보 7분", highlight: "참나무 화덕에서 바로 구워 쫄깃쫄깃함의 끝을 달리는 원조 나폴리 피자", description: "오랫동안 미식가들의 사랑을 받고 있는 화덕 피자의 성지입니다.", lat: 37.502240, lng: 127.036620 },
+            { id: "spot6", title: "이도곰탕 본점", category: "food", time: 8, address: "서울 강남구 논현로94길 29-5 (역삼동 671-17)", direction: "도보 8분", highlight: "수요미식회 극찬! 밥알에 국물 감칠맛이 싹 토렴되어 나오는 맑은 한우곰탕", description: "속을 따뜻하고 깊게 덥혀주는 맑은 한우 곰탕 전문점입니다.", lat: 37.503020, lng: 127.040520 },
+            { id: "spot7", title: "대우부대찌개", category: "food", time: 10, address: "서울 강남구 테헤란로25길 34 (역삼동 641-18)", direction: "도보 10분", highlight: "생미나리가 폭포처럼 올라가 상큼하면서도 한우 등심이 깊은 맛을 내는 전골", description: "미나리를 산더미처럼 쌓아 담백 시원하여 싸피 부원들과 대인원으로 가기 좋습니다.", lat: 37.499920, lng: 127.034250 },
+            { id: "spot8", title: "파브리끄 역삼 GFC점", category: "food", time: 5, address: "서울 강남구 테헤란로 152 GFC 지하1층 (역삼동 737)", direction: "도보 5분", highlight: "블루리본 서베이에 빛나는 수제 쫀쫀한 생크림 아인슈페너의 원조", description: "고소한 커피 플래터 위에 달콤 밀도 가득한 생크림의 밸런스가 최고입니다.", lat: 37.500050, lng: 127.036520 }
         ];
 
         let spots = [];
@@ -229,6 +235,7 @@
         let mainMap = null;
         let currentFilter = 'all';
         let myCourse = [];
+        let searchQuery = "";
 
         const spotsGrid = document.getElementById('spotsGrid');
         const emptyPreviewCard = document.getElementById('emptyPreviewCard');
@@ -236,27 +243,48 @@
         const plannerPathContainer = document.getElementById('plannerPathContainer');
 
         function initDataAndRender() {
-            // 제보 페이지나 다른 곳에서 등록한 커스텀 데이터가 있다면 로컬스토리지에서 가져와 병합
+            // 제보용 스토리지(ssafy_custom_spots)가 있으면 데이터 결합
             const savedCustom = JSON.parse(localStorage.getItem('ssafy_custom_spots')) || [];
             spots = [...BASE_SPOTS, ...savedCustom];
             
             document.getElementById('spotsCount').textContent = spots.length;
             renderCards();
             renderPlannerUI();
+            if (mainMap) drawMapMarkers();
         }
 
         function renderCards() {
             spotsGrid.innerHTML = '';
-            const filtered = spots.filter(s => currentFilter === 'all' || s.category === currentFilter);
+            const filtered = spots.filter(s => {
+                const matchesCategory = currentFilter === 'all' || s.category === currentFilter;
+                const matchesQuery = s.title.toLowerCase().includes(searchQuery) || s.description.toLowerCase().includes(searchQuery);
+                return matchesCategory && matchesQuery;
+            });
             
             filtered.forEach(spot => {
                 const card = document.createElement('div');
-                card.className = "bg-white dark:bg-darkCard p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm cursor-pointer";
+                card.className = "group bg-white dark:bg-darkCard p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm cursor-pointer hover:border-primary-500/50 transition-all flex flex-col justify-between";
                 card.onclick = () => selectSpot(spot.id);
+                
+                const isCustom = spot.id.startsWith('spot_custom_');
+                
                 card.innerHTML = `
-                    <span class="text-xs px-2 py-0.5 font-bold rounded-full ${spot.category==='walk'?'bg-blue-50 text-blue-500':'bg-amber-50 text-amber-500'}">${spot.category==='walk'?'🌲 산책':'🍲 맛집'}</span>
-                    <h4 class="font-bold text-lg mt-2">${spot.title}</h4>
-                    <p class="text-xs text-slate-400 mt-1">🕒 도보 ${spot.time}분</p>
+                    <div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs px-2 py-0.5 font-bold rounded-full ${spot.category==='walk'?'bg-blue-50 text-blue-500':'bg-amber-50 text-amber-500'}">${spot.category==='walk'?'🌲 산책':'🍲 맛집'}</span>
+                            <span class="text-xs text-slate-400 font-medium">🕒 도보 ${spot.time}분</span>
+                        </div>
+                        <h4 class="font-bold text-lg mt-2 flex items-center gap-1">
+                            ${isCustom ? '<span class="text-indigo-500 text-xs font-bold">[제보]</span>' : ''}
+                            <span>${spot.title}</span>
+                        </h4>
+                        <p class="text-xs text-slate-500 mt-1 truncate">${spot.address}</p>
+                        <p class="text-sm text-slate-400 mt-2 line-clamp-2">${spot.description}</p>
+                    </div>
+                    <div class="mt-4 pt-3 border-t flex justify-between items-center text-xs text-slate-400 dark:border-slate-800">
+                        <span>상세 가이드 확인</span>
+                        <button onclick="event.stopPropagation(); addSpotToPlanner('${spot.id}')" class="px-2 py-1 bg-primary-500 text-white rounded-lg text-[11px] font-bold">🎯 담기</button>
+                    </div>
                 `;
                 spotsGrid.appendChild(card);
             });
@@ -265,7 +293,9 @@
         function initMainGoogleMap() {
             if (!window.google) return;
             mainMap = new google.maps.Map(document.getElementById('mainMap'), {
-                center: { lat: SSAFY_COORD[0], lng: SSAFY_COORD[1] }, zoom: 16
+                center: { lat: SSAFY_COORD[0], lng: SSAFY_COORD[1] }, 
+                zoom: 16,
+                disableDefaultUI: false
             });
 
             new google.maps.Marker({
@@ -281,7 +311,14 @@
             googleMarkers.forEach(m => m.setMap(null));
             googleMarkers = [];
 
-            spots.forEach(spot => {
+            // 카테고리 필터가 적용된 마커만 맵에 드로잉 처리
+            const filtered = spots.filter(s => {
+                const matchesCategory = currentFilter === 'all' || s.category === currentFilter;
+                const matchesQuery = s.title.toLowerCase().includes(searchQuery) || s.description.toLowerCase().includes(searchQuery);
+                return matchesCategory && matchesQuery;
+            });
+
+            filtered.forEach(spot => {
                 const markerColor = spot.category === 'walk' ? '#1c64d0' : '#f59e0b';
                 const marker = new google.maps.Marker({
                     position: { lat: spot.lat, lng: spot.lng }, map: mainMap, title: spot.title,
@@ -308,7 +345,7 @@
 
             document.getElementById('previewAddBtn').onclick = () => { addSpotToPlanner(spot.id); };
             
-            if(mainMap) { mainMap.panTo({ lat: spot.lat, lng: spot.lng }); }
+            if(mainMap) { mainMap.panTo({ lat: spot.lat, lng: spot.lng }); mainMap.setZoom(17); }
         }
 
         function addSpotToPlanner(id) {
@@ -333,7 +370,7 @@
             myCourse.forEach((spot, index) => {
                 totalTime += spot.time;
                 const node = document.createElement('div');
-                node.className = "bg-slate-900 text-white text-xs px-3 py-1.5 rounded-xl font-medium";
+                node.className = "bg-slate-900 text-white text-xs px-3 py-1.5 rounded-xl font-medium flex items-center gap-2";
                 node.innerHTML = `<span>${index + 1}. ${spot.title}</span>`;
                 plannerPathContainer.appendChild(node);
 
@@ -360,7 +397,15 @@
         function setFilter(category) {
             currentFilter = category;
             renderCards();
+            if (mainMap) drawMapMarkers();
         }
+
+        // 실시간 타이핑 검색 연동
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            searchQuery = e.target.value.toLowerCase().trim();
+            renderCards();
+            if (mainMap) drawMapMarkers();
+        });
 
         function openAddSpotModal() { document.getElementById('addSpotModal').classList.remove('hidden'); }
         function closeAddSpotModal() { document.getElementById('addSpotModal').classList.add('hidden'); }
@@ -377,7 +422,7 @@
             const lng = SSAFY_COORD[1] + (Math.random() - 0.5) * 0.004;
 
             const newSpot = {
-                id: `spot_custom_${Date.now()}`, title, category, time, address: "제보 주소 권역",
+                id: `spot_custom_${Date.now()}`, title, category, time, address: "제보된 역삼동 골목 권역",
                 direction: `도보 ${time}분`, highlight, description, lat, lng,
                 image: "https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=800&q=80"
             };
@@ -388,11 +433,10 @@
 
             closeAddSpotModal();
             initDataAndRender();
-            if(mainMap) drawMapMarkers();
-            alert(`🎉 장소 "${title}" 제보 등록이 완료되어 하단 전체 스폿 리스트에 연동되었습니다.`);
+            alert(`🎉 장소 "${title}" 제보 등록이 완료되어 하단 전체 스폿 리스트와 지도에 연동되었습니다.`);
         }
 
-        // 지도의 비동기 동적 인젝션 로딩 처리
+        // 비동기 지도 엔진 탑재 호출
         (function() {
             const script = document.createElement('script');
             script.src = `https://maps.googleapis.com/maps/api/js?key=${DEFAULT_API_KEY}&language=ko&callback=initMainGoogleMap`;
