@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>싸피 10분 마스터 - 전체 스폿</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { darkMode: 'class', theme: { extend: { colors: { primary: { 50: '#f0f7ff', 500: '#1c64d0' }, darkBg: '#0f172a', darkCard: '#1e293b' } } } }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style> body { font-family: 'Pretendard', sans-serif; } </style>
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-darkBg dark:text-slate-200 min-h-screen">
+
+    <header class="sticky top-0 z-[1000] backdrop-blur-md bg-white/80 dark:bg-darkBg/80 border-b border-slate-200 dark:border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <a href="index.html" class="flex items-center space-x-3">
+                <div class="p-2 bg-primary-500 rounded-xl text-white shadow-md">🗺️</div>
+                <div class="hidden sm:block">
+                    <h1 class="text-sm font-bold text-slate-900 dark:text-white leading-tight">싸피 서울캠퍼스 10분 마스터</h1>
+                </div>
+            </a>
+            <nav class="flex items-center space-x-8 text-sm font-medium">
+                <a href="index.html" class="text-slate-600 hover:text-primary-500 dark:text-slate-300 transition-colors">🗺️ 지도 탐색</a>
+                <a href="spots.html" class="text-primary-500 font-bold">🌲 전체 스폿</a>
+                <a href="planner.html" class="text-slate-600 hover:text-primary-500 dark:text-slate-300 transition-colors">🧳 코스 플래너</a>
+                <a href="report.html" class="text-slate-600 hover:text-primary-500 dark:text-slate-300 transition-colors">➕ 장소 제보</a>
+            </nav>
+            <button id="themeToggle" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-sm">🌓</button>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
+            <div>
+                <h2 class="text-2xl font-bold tracking-tight">🌲 싸피 가이드 추천 전체 스폿</h2>
+                <p class="text-xs text-slate-400 mt-1">멀티캠퍼스 역삼 근처 최적의 힐링 지점들을 조건별로 탐험하세요.</p>
+            </div>
+            <div class="flex gap-2">
+                <button class="px-4 py-2 bg-primary-500 text-white rounded-xl text-xs font-semibold">전체</button>
+                <button class="px-4 py-2 bg-white dark:bg-darkCard text-slate-600 dark:text-slate-300 rounded-xl text-xs font-semibold border">🌲 산책로</button>
+                <button class="px-4 py-2 bg-white dark:bg-darkCard text-slate-600 dark:text-slate-300 rounded-xl text-xs font-semibold border">🍲 맛집</button>
+            </div>
+        </div>
+
+        <div id="spotsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="bg-white dark:bg-darkCard rounded-2xl p-5 border border-slate-200 dark:border-slate-800 shadow-sm space-y-3">
+                <div class="h-40 bg-slate-200 dark:bg-slate-800 rounded-xl flex items-center justify-center text-xs text-slate-400">[이미지 영역]</div>
+                <span class="inline-block px-2 py-0.5 bg-blue-50 text-blue-500 text-xs font-semibold rounded-full">🌲 산책로</span>
+                <h4 class="font-bold text-lg">역삼문화공원 & 국기원 산책로</h4>
+                <p class="text-xs text-indigo-500">📍 서울 강남구 테헤란로7길 32</p>
+                <p class="text-xs text-slate-400">멀티캠퍼스 역삼 ➡️ 국기원 고개 도보 10분</p>
+            </div>
+            <div class="bg-white dark:bg-darkCard rounded-2xl p-5 border border-slate-200 dark:border-slate-800 shadow-sm space-y-3">
+                <div class="h-40 bg-slate-200 dark:bg-slate-800 rounded-xl flex items-center justify-center text-xs text-slate-400">[이미지 영역]</div>
+                <span class="inline-block px-2 py-0.5 bg-amber-50 text-amber-500 text-xs font-semibold rounded-full">🍲 대표 맛집</span>
+                <h4 class="font-bold text-lg">지아니스나폴리 역삼본점</h4>
+                <p class="text-xs text-indigo-500">📍 서울 강남구 논현로94길 15</p>
+                <p class="text-xs text-slate-400">참나무 화덕에서 바로 구워 쫄깃한 나폴리 화덕 피자</p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.getElementById('themeToggle').onclick = () => document.documentElement.classList.toggle('dark');
+    </script>
+</body>
+</html>
