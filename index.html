@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>싸피 10분 마스터 - 홈 & 지도</title>
+    <title>싸피(SSAFY) 서울캠퍼스 도보 10분 마스터 - 통합 탐색</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -11,25 +12,51 @@
             theme: {
                 extend: {
                     colors: {
-                        primary: { 50: '#f0f7ff', 100: '#e0effe', 200: '#bae0fd', 500: '#1c64d0', 600: '#154eb8', 700: '#0f3a94' },
-                        accent: { 500: '#49a1e8' }, darkBg: '#0f172a', darkCard: '#1e293b'
+                        primary: {
+                            50: '#f0f7ff',
+                            100: '#e0effe',
+                            200: '#bae0fd',
+                            500: '#1c64d0', // SSAFY Denim Blue
+                            600: '#154eb8',
+                            700: '#0f3a94',
+                        },
+                        accent: {
+                            500: '#49a1e8', // SSAFY Light Blue
+                        },
+                        darkBg: '#0f172a',
+                        darkCard: '#1e293b'
                     }
                 }
             }
         }
     </script>
-    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <style> body { font-family: 'Pretendard', sans-serif; } </style>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Pretendard', sans-serif; }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
+        .dark ::-webkit-scrollbar-thumb { background: #475569; }
+    </style>
 </head>
-<body class="bg-slate-50 text-slate-800 dark:bg-darkBg dark:text-slate-200 transition-colors min-h-screen">
+<body class="bg-slate-50 text-slate-800 transition-colors duration-300 dark:bg-darkBg dark:text-slate-200 min-h-screen">
 
-    <header class="sticky top-0 z-[1000] backdrop-blur-md bg-white/80 dark:bg-darkBg/80 border-b border-slate-200 dark:border-slate-800">
+    <header class="sticky top-0 z-[1000] backdrop-blur-md bg-white/80 dark:bg-darkBg/80 border-b border-slate-200 dark:border-slate-800 transition-colors">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             <a href="index.html" class="flex items-center space-x-3">
-                <div class="p-2 bg-primary-500 rounded-xl text-white shadow-md">🗺️</div>
+                <div class="p-2 bg-primary-500 rounded-xl text-white shadow-lg shadow-primary-500/20">
+                    <svg class="w-6 h-6 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
+                </div>
                 <div>
-                    <h1 class="text-sm font-bold text-slate-900 dark:text-white leading-tight">싸피 서울캠퍼스 10분 마스터</h1>
-                    <p class="text-[11px] text-slate-500">핫 플레이스 로드맵</p>
+                    <h1 class="text-sm font-bold tracking-tight text-slate-900 dark:text-white leading-tight">싸피 서울캠퍼스 10분 마스터</h1>
+                    <p class="text-[11px] text-slate-500 dark:text-slate-400">핫 플레이스 로드맵</p>
                 </div>
             </a>
             <nav class="hidden md:flex items-center space-x-8 text-sm font-medium">
@@ -38,154 +65,343 @@
                 <a href="planner.html" class="text-slate-600 hover:text-primary-500 dark:text-slate-300 transition-colors">🧳 코스 플래너</a>
                 <a href="report.html" class="text-slate-600 hover:text-primary-500 dark:text-slate-300 transition-colors">➕ 장소 제보</a>
             </nav>
-            <button id="themeToggle" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-sm">🌓 모드 전환</button>
+            <div class="flex items-center space-x-2sm:space-x-4">
+                <button id="themeToggle" class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300" aria-label="화면 모드 변경">🌓 모드 전환</button>
+                <button onclick="openAddSpotModal()" class="inline-flex items-center space-x-1.5 px-3.5 py-2 bg-indigo-50 hover:bg-indigo-100 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 rounded-xl text-sm font-semibold transition-all">
+                    <span>➕ 팝업 제보</span>
+                </button>
+            </div>
         </div>
     </header>
 
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
-        <div class="rounded-3xl bg-gradient-to-br from-primary-500 to-indigo-800 text-white p-8 shadow-xl">
-            <h2 class="text-3xl font-extrabold mb-2">바쁜 싸피 생활 속,<br><span class="text-accent-500">단 10분 거리의 핫 플레이스</span></h2>
-            <p class="text-white/80 text-sm max-w-xl">멀티캠퍼스 역삼 주변의 엄선된 산책로와 맛집 맵을 확인하고 점심시간 힐링 동선을 찾아보세요.</p>
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12">
+        
+        <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary-500 to-indigo-800 dark:from-primary-700 dark:to-slate-900 text-white p-6 sm:p-10 shadow-2xl">
+            <div class="max-w-2xl relative z-10 space-y-4">
+                <span class="inline-block px-3 py-1 bg-white/20 rounded-full text-xs font-semibold tracking-wider uppercase">SSAFY SEOUL 10-MINUTES HOTSPOTS</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight leading-tight">바쁜 싸피 생활 속에서,<br><span class="text-accent-500">단 10분 거리의 핫 플레이스</span></h2>
+                <p class="text-white/80 text-sm sm:text-base">멀티캠퍼스 역삼 주변의 엄선된 산책로와 맛집 맵을 실시간으로 확인하고 식후 밸런스를 맞춰 보세요.</p>
+                <div class="flex flex-col sm:flex-row gap-3 pt-2">
+                    <div class="relative flex-grow">
+                        <input id="searchInput" type="text" placeholder="어디로 가고 싶으신가요? (예: 피자, 국기원...)" class="w-full pl-4 pr-4 py-3 bg-white text-slate-800 rounded-xl focus:outline-none shadow-md">
+                    </div>
+                    <div class="flex gap-2">
+                        <button id="btnFilterAll" class="px-5 py-3 bg-white text-slate-800 rounded-xl font-semibold text-sm transition-all" onclick="setFilter('all')">전체</button>
+                        <button id="btnFilterWalk" class="px-5 py-3 bg-white/10 hover:bg-white/20 text-white rounded-xl font-semibold text-sm transition-all" onclick="setFilter('walk')">🌲 산책</button>
+                        <button id="btnFilterFood" class="px-5 py-3 bg-white/10 hover:bg-white/20 text-white rounded-xl font-semibold text-sm transition-all" onclick="setFilter('food')">🍲 맛집</button>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            <div class="lg:col-span-7 bg-white dark:bg-darkCard rounded-3xl p-6 shadow-md border border-slate-100 dark:border-slate-800">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-lg font-bold">싸피 10분 고정밀 로컬 맵</h3>
-                    <span class="text-xs px-2.5 py-1 bg-primary-50 text-primary-500 font-medium rounded-full animate-pulse">실시간 연동 중</span>
+            <div class="lg:col-span-7 bg-white dark:bg-darkCard rounded-3xl p-6 shadow-xl border border-slate-100 dark:border-slate-800 space-y-4">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <h3 class="text-xl font-bold tracking-tight">싸피 10분 고정밀 로컬 맵</h3>
+                        <p class="text-xs text-slate-400 dark:text-slate-500">지도를 조작하고 핀(마커)을 클릭하면 상세 안내가 동기화됩니다.</p>
+                    </div>
+                    <span class="text-xs px-2.5 py-1 bg-primary-50 dark:bg-primary-900/30 text-primary-500 dark:text-accent-500 font-medium rounded-full animate-pulse">실시간 연동 중</span>
                 </div>
-                <div id="mainMap" class="w-full h-[400px] rounded-2xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800"></div>
-                
-                <div class="text-[11px] text-slate-400 text-center flex items-center justify-center space-x-4 mt-3">
+                <div id="mapWrapper" class="relative w-full h-[400px] rounded-2xl overflow-hidden border bg-slate-100 dark:bg-slate-900 border-slate-200 dark:border-slate-800 shadow-inner">
+                    <div id="mainMap" class="w-full h-full"></div>
+                </div>
+                <div class="text-[11px] text-slate-400 text-center flex items-center justify-center space-x-4">
                     <span class="flex items-center"><span class="w-3.5 h-3.5 rounded-full bg-indigo-600 border-2 border-white inline-block mr-1"></span>싸피 서울캠</span>
                     <span class="flex items-center"><span class="w-3.5 h-3.5 rounded-full bg-primary-500 border-2 border-white inline-block mr-1"></span>산책 명소</span>
                     <span class="flex items-center"><span class="w-3.5 h-3.5 rounded-full bg-amber-500 border-2 border-white inline-block mr-1"></span>추천 맛집</span>
                 </div>
             </div>
-            
-            <div class="lg:col-span-5 bg-white dark:bg-darkCard rounded-3xl p-6 shadow-md border border-slate-100 dark:border-slate-800 min-h-[460px] flex flex-col justify-between">
-                <div id="emptyPreviewCard" class="text-center py-20 space-y-3">
+
+            <div id="quickViewContainer" class="lg:col-span-5 space-y-6">
+                <div id="emptyPreviewCard" class="bg-gradient-to-tr from-slate-100 to-slate-50 dark:from-slate-800 dark:to-slate-900 rounded-3xl p-8 border text-center space-y-4 py-24">
                     <div class="text-4xl">🔍</div>
-                    <h4 class="font-bold">지도의 핀을 선택해 주세요</h4>
-                    <p class="text-xs text-slate-400">세부 도로명 주소와 싸피인 전용 로컬 꿀팁 뷰가 여기에 실시간으로 표시됩니다.</p>
+                    <h4 class="font-bold text-lg">지도의 동그라미 핀을 눌러보세요!</h4>
+                    <p class="text-sm text-slate-400">실제 역삼동 세부 도로명 주소 정보와 함께 상세 꿀팁 뷰가 이곳에 실시간 업데이트됩니다.</p>
                 </div>
-                <div id="activePreviewCard" class="hidden space-y-4">
-                    <span id="previewTag" class="px-2.5 py-0.5 bg-primary-50 text-primary-500 text-xs font-semibold rounded-full">카테고리</span>
+
+                <div id="activePreviewCard" class="hidden bg-white dark:bg-darkCard rounded-3xl p-6 shadow-xl border border-slate-100 dark:border-slate-800 space-y-5">
+                    <div class="flex justify-between items-start">
+                        <span id="previewTag" class="px-3 py-1 bg-primary-50 text-primary-500 text-xs font-semibold rounded-full">카테고리</span>
+                        <span id="previewTime" class="text-sm font-bold text-slate-500">도보 0분</span>
+                    </div>
                     <h4 id="previewTitle" class="text-2xl font-extrabold text-slate-800 dark:text-white">장소명</h4>
-                    <div class="flex items-center text-xs text-indigo-600 font-bold bg-indigo-50 px-3 py-2 rounded-xl">
-                        <span id="previewAddress">📍 주소 데이터</span>
+                    <div class="p-3 bg-indigo-50 dark:bg-slate-900 rounded-xl text-xs font-bold text-indigo-600 dark:text-accent-500">
+                        <span id="previewAddress">도로명 주소</span>
                     </div>
                     <div class="p-4 bg-slate-50 dark:bg-slate-900 rounded-2xl border text-sm">
-                        <p class="font-semibold text-primary-500">💡 싸피 메이트 로컬 꿀팁</p>
-                        <p id="previewTip" class="text-slate-600 dark:text-slate-300 mt-1">꿀팁 데이터</p>
+                        <p class="font-semibold text-primary-500">💡 싸피인을 위한 꿀팁 & 매력</p>
+                        <p id="previewHighlight" class="text-slate-600 dark:text-slate-300 mt-1"></p>
                     </div>
-                    <button id="previewAddBtn" class="w-full text-center py-3 bg-primary-500 text-white rounded-xl text-sm font-bold shadow-lg">🎯 코스에 담기</button>
+                    <p id="previewDesc" class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed"></p>
+                    <button id="previewAddBtn" class="w-full py-3 bg-primary-500 text-white rounded-xl text-sm font-bold shadow-lg">코스에 담기</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="space-y-6">
+            <h3 class="text-2xl font-bold tracking-tight">🌲 싸피 10분 가이드 전체 스폿 (<span id="spotsCount">0</span>)</h3>
+            <div id="spotsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+        </div>
+
+        <div id="planner-section" class="bg-gradient-to-br from-slate-900 to-slate-850 text-white rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6">
+            <div class="flex justify-between items-center">
+                <div>
+                    <span class="px-2.5 py-0.5 bg-primary-500/20 text-accent-500 text-xs font-semibold rounded-full">스마트 로드 플래너</span>
+                    <h3 class="text-2xl font-bold tracking-tight mt-1">싸피(SSAFY) 도보 코스 메이커</h3>
+                </div>
+                <button onclick="clearPlanner()" class="px-4 py-2 bg-red-950/40 text-red-300 rounded-xl text-xs border border-red-900/50">초기화</button>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+                <div class="lg:col-span-8 bg-slate-950/60 rounded-2xl p-6 border border-slate-800 flex flex-col justify-between min-h-[200px]">
+                    <div id="plannerPathContainer" class="flex flex-wrap items-center gap-4 py-4"></div>
+                    <div class="border-t border-slate-800/80 pt-4 flex justify-between text-sm">
+                        <div>총 경유 장소: <span id="routeCount" class="font-bold text-accent-500">0곳</span></div>
+                        <div>예상 순수 도보: <span id="routeTime" class="font-bold text-accent-500">총 0분</span></div>
+                    </div>
+                </div>
+                <div class="lg:col-span-4 bg-slate-900/40 rounded-2xl p-6 border border-slate-800 flex flex-col justify-between">
+                    <p class="text-xs text-slate-400 leading-relaxed">완성된 일정을 텍스트로 복사하여 카카오톡이나 디스코드 채널에 공유하고 동기들과 번개 스터디 약속을 정해 보세요.</p>
+                    <button onclick="sharePlan()" class="w-full py-3 bg-primary-500 text-white rounded-xl text-sm font-bold shadow-md mt-4">📋 일정 텍스트로 내보내기</button>
                 </div>
             </div>
         </div>
     </main>
 
+    <div id="addSpotModal" class="fixed inset-0 z-[2000] hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white dark:bg-darkCard rounded-3xl max-w-lg w-full overflow-hidden shadow-2xl p-6 space-y-4">
+            <div class="flex justify-between items-center border-b pb-3 dark:border-slate-800">
+                <h3 class="text-xl font-bold">➕ 나만의 숨은 꿀장소 제보</h3>
+                <button onclick="closeAddSpotModal()" class="text-slate-400 hover:text-slate-600">✕</button>
+            </div>
+            <form onsubmit="addNewSpot(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold mb-1">장소 이름 *</label>
+                    <input id="newSpotTitle" type="text" required placeholder="예: 구름정원 카페" class="w-full px-3 py-2 text-sm bg-slate-50 border rounded-xl dark:bg-slate-900 dark:text-white">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold mb-1">카테고리 *</label>
+                        <select id="newSpotCategory" required class="w-full px-3 py-2 text-sm bg-slate-50 border rounded-xl dark:bg-slate-900 dark:text-white">
+                            <option value="walk">🌲 숲 & 산책로</option>
+                            <option value="food">🍲 로컬 맛집</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold mb-1">도보 시간 (분) *</label>
+                        <input id="newSpotTime" type="number" required placeholder="예: 5" class="w-full px-3 py-2 text-sm bg-slate-50 border rounded-xl dark:bg-slate-900 dark:text-white">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold mb-1">한 줄 매력 *</label>
+                    <input id="newSpotHighlight" type="text" required placeholder="예: 참나무 화덕 원조 피자 맛집" class="w-full px-3 py-2 text-sm bg-slate-50 border rounded-xl dark:bg-slate-900 dark:text-white">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold mb-1">상세 설명 *</label>
+                    <textarea id="newSpotDesc" required rows="2" placeholder="간단한 장소 특징을 기재해 주세요." class="w-full px-3 py-2 text-sm bg-slate-50 border rounded-xl dark:bg-slate-900 dark:text-white"></textarea>
+                </div>
+                <div class="flex justify-end space-x-2 pt-3 border-t dark:border-slate-800">
+                    <button type="button" onclick="closeAddSpotModal()" class="px-4 py-2 text-xs text-slate-500">취소</button>
+                    <button type="submit" class="px-5 py-2 bg-primary-500 text-white rounded-xl text-xs font-bold shadow-md">제보 완료</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer class="bg-white dark:bg-slate-950 text-slate-400 py-10 border-t border-slate-200 dark:border-slate-900 text-center mt-20">
+        <p class="text-xs font-bold text-slate-500 tracking-wider">SSAFY SEOUL MULTICAMPUS 10-MINUTES HOTSPOTS</p>
+        <p class="text-[11px] max-w-md mx-auto leading-relaxed mt-2 text-slate-400">본 가이드는 싸피 서울캠퍼스(멀티캠퍼스 역삼) 기준 도보 10분 권역 내 꿀플레이스 아카이브 정보입니다.</p>
+        <p class="text-[10px] mt-4">&copy; 2026 싸피 도보 10분 마스터. All rights reserved.</p>
+    </footer>
+
     <script>
-        const SSAFY_COORD = [37.5012746, 127.0395857]; // 테헤란로 212 멀티캠퍼스 역삼
+        const SSAFY_COORD = [37.5012746, 127.0395857];
         const DEFAULT_API_KEY = "AIzaSyDc2CKJSsoyceRq08d8aPkdFfewcdTFAHM";
 
-        const DEFAULT_SPOTS = [
-            { id: "spot1", title: "역삼문화공원 & 국기원 산책로", category: "walk", time: 10, address: "서울 강남구 테헤란로7길 32", tip: "공원 내 벤치에 누워 햇볕을 쐬거나 알고리즘 스트레스를 식히기 좋은 최적의 숲길입니다.", lat: 37.502515, lng: 127.030391 },
-            { id: "spot2", title: "지아니스나폴리 역삼본점", category: "food", time: 7, address: "서울 강남구 논현로94길 15", tip: "참나무 화덕에서 바로 구워 쫀득함의 끝을 달리는 나폴리 화덕 피자가 별미입니다.", lat: 37.502240, lng: 127.036620 },
-            { id: "spot3", title: "파브리끄 역삼 GFC점", category: "food", time: 5, address: "서울 강남구 테헤란로 152 GFC 지하1층", tip: "수제 생크림 아인슈페너의 원조집으로 식후 당 충전을 확실히 보장합니다.", lat: 37.500050, lng: 127.036520 }
+        const BASE_SPOTS = [
+            { id: "spot1", title: "역삼문화공원 & 국기원 산책로", category: "walk", time: 10, address: "서울 강남구 테헤란로7길 32", direction: "도보 10분", highlight: "맑은 피톤치드를 한껏 들이마시는 싸피의 비밀 힐링길", description: "코딩으로 머리가 무거워졌을 때 식후 산책하면서 정적을 느끼기 최고의 코스입니다.", lat: 37.502515, lng: 127.030391 },
+            { id: "spot2", title: "지아니스나폴리 역삼본점", category: "food", time: 7, address: "서울 강남구 논현로94길 15", direction: "도보 7분", highlight: "참나무 화덕에서 바로 구워 쫄깃쫄깃함의 끝을 달리는 원조 피자", description: "오랫동안 미식가들의 사랑을 받고 있는 화덕 피자의 성지입니다.", lat: 37.502240, lng: 127.036620 },
+            { id: "spot3", title: "파브리끄 역삼 GFC점", category: "food", time: 5, address: "서울 강남구 테헤란로 152 GFC 지하1층", direction: "도보 5분", highlight: "블루리본 서베이에 빛나는 수제 생크림 아인슈페너의 원조", description: "흐트러지지 않는 달콤 밀도 가득한 생크림 밸런스가 최고입니다.", lat: 37.500050, lng: 127.036520 }
         ];
 
-        let mainMap = null;
+        let spots = [];
         let googleMarkers = [];
-        let selectedSpotId = null;
+        let mainMap = null;
+        let currentFilter = 'all';
+        let myCourse = [];
 
+        const spotsGrid = document.getElementById('spotsGrid');
         const emptyPreviewCard = document.getElementById('emptyPreviewCard');
         const activePreviewCard = document.getElementById('activePreviewCard');
-        const previewTag = document.getElementById('previewTag');
-        const previewTitle = document.getElementById('previewTitle');
-        const previewAddress = document.getElementById('previewAddress');
-        const previewTip = document.getElementById('previewTip');
-        const previewAddBtn = document.getElementById('previewAddBtn');
+        const plannerPathContainer = document.getElementById('plannerPathContainer');
 
-        // 지도 초기화 함수
-        function initAllMaps() {
+        function initDataAndRender() {
+            // 제보 페이지나 다른 곳에서 등록한 커스텀 데이터가 있다면 로컬스토리지에서 가져와 병합
+            const savedCustom = JSON.parse(localStorage.getItem('ssafy_custom_spots')) || [];
+            spots = [...BASE_SPOTS, ...savedCustom];
+            
+            document.getElementById('spotsCount').textContent = spots.length;
+            renderCards();
+            renderPlannerUI();
+        }
+
+        function renderCards() {
+            spotsGrid.innerHTML = '';
+            const filtered = spots.filter(s => currentFilter === 'all' || s.category === currentFilter);
+            
+            filtered.forEach(spot => {
+                const card = document.createElement('div');
+                card.className = "bg-white dark:bg-darkCard p-5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm cursor-pointer";
+                card.onclick = () => selectSpot(spot.id);
+                card.innerHTML = `
+                    <span class="text-xs px-2 py-0.5 font-bold rounded-full ${spot.category==='walk'?'bg-blue-50 text-blue-500':'bg-amber-50 text-amber-500'}">${spot.category==='walk'?'🌲 산책':'🍲 맛집'}</span>
+                    <h4 class="font-bold text-lg mt-2">${spot.title}</h4>
+                    <p class="text-xs text-slate-400 mt-1">🕒 도보 ${spot.time}분</p>
+                `;
+                spotsGrid.appendChild(card);
+            });
+        }
+
+        function initMainGoogleMap() {
             if (!window.google) return;
-
             mainMap = new google.maps.Map(document.getElementById('mainMap'), {
-                center: { lat: SSAFY_COORD[0], lng: SSAFY_COORD[1] },
-                zoom: 16,
-                disableDefaultUI: false
+                center: { lat: SSAFY_COORD[0], lng: SSAFY_COORD[1] }, zoom: 16
             });
 
-            // 싸피 중심점 마커 추가
             new google.maps.Marker({
-                position: { lat: SSAFY_COORD[0], lng: SSAFY_COORD[1] },
-                map: mainMap,
-                title: "싸피 서울캠퍼스",
-                icon: {
-                    path: google.maps.SymbolPath.CIRCLE, scale: 20, fillColor: "#1c64d0", fillOpacity: 1, strokeColor: "#ffffff", strokeWeight: 3
-                },
+                position: { lat: SSAFY_COORD[0], lng: SSAFY_COORD[1] }, map: mainMap, title: "싸피 서울캠퍼스",
+                icon: { path: google.maps.SymbolPath.CIRCLE, scale: 20, fillColor: "#1c64d0", fillOpacity: 1, strokeColor: "#ffffff", strokeWeight: 3 },
                 label: { text: "SSAFY", color: "#ffffff", fontSize: "8px", fontWeight: "900" }
             });
 
-            // 추천 스폿 마커 드로잉
-            renderGoogleMarkers();
+            drawMapMarkers();
         }
 
-        function renderGoogleMarkers() {
-            DEFAULT_SPOTS.forEach(spot => {
+        function drawMapMarkers() {
+            googleMarkers.forEach(m => m.setMap(null));
+            googleMarkers = [];
+
+            spots.forEach(spot => {
                 const markerColor = spot.category === 'walk' ? '#1c64d0' : '#f59e0b';
                 const marker = new google.maps.Marker({
-                    position: { lat: spot.lat, lng: spot.lng },
-                    map: mainMap,
-                    title: spot.title,
-                    icon: {
-                        path: google.maps.SymbolPath.CIRCLE, scale: 10, fillColor: markerColor, fillOpacity: 0.95, strokeColor: "#ffffff", strokeWeight: 2
-                    }
+                    position: { lat: spot.lat, lng: spot.lng }, map: mainMap, title: spot.title,
+                    icon: { path: google.maps.SymbolPath.CIRCLE, scale: 10, fillColor: markerColor, fillOpacity: 0.95, strokeColor: "#ffffff", strokeWeight: 2 }
                 });
-
                 marker.addListener('click', () => { selectSpot(spot.id); });
                 googleMarkers.push(marker);
             });
         }
 
-        // 마커 클릭 시 우측 프리뷰 정보 전환
         function selectSpot(id) {
-            selectedSpotId = id;
-            const spot = DEFAULT_SPOTS.find(s => s.id === id);
-            if (!spot) return;
+            const spot = spots.find(s => s.id === id);
+            if(!spot) return;
 
             emptyPreviewCard.classList.add('hidden');
             activePreviewCard.classList.remove('hidden');
 
-            previewTag.textContent = spot.category === 'walk' ? '🌲 산책로' : '🍲 맛집';
-            previewTitle.textContent = spot.title;
-            previewAddress.textContent = `📍 주소: ${spot.address} (도보 ${spot.time}분)`;
-            previewTip.textContent = spot.tip;
+            document.getElementById('previewTag').textContent = spot.category === 'walk' ? '🌲 산책로' : '🍲 맛집';
+            document.getElementById('previewTime').textContent = `도보 ${spot.time}분`;
+            document.getElementById('previewTitle').textContent = spot.title;
+            document.getElementById('previewAddress').textContent = `📍 주소: ${spot.address}`;
+            document.getElementById('previewHighlight').textContent = spot.highlight || spot.title;
+            document.getElementById('previewDesc').textContent = spot.description;
 
-            previewAddBtn.onclick = () => {
-                // 로컬스토리지 연동용 코드 세팅 (planner.html 장바구니 연동)
-                let course = JSON.parse(localStorage.getItem('ssafy_course')) || [];
-                if(!course.some(item => item.id === spot.id)) {
-                    course.push(spot);
-                    localStorage.setItem('ssafy_course', JSON.stringify(course));
-                    alert(`"${spot.title}"을 투어 계획에 담았습니다! 코스 플래너 페이지에서 확인하세요.`);
-                } else {
-                    alert("이미 등록된 장소입니다.");
-                }
-            };
+            document.getElementById('previewAddBtn').onclick = () => { addSpotToPlanner(spot.id); };
+            
+            if(mainMap) { mainMap.panTo({ lat: spot.lat, lng: spot.lng }); }
         }
 
-        // 비동기로 구글 맵 API 라이브러리 스크립트 강제 로드
-        (function loadGoogleMapsScript() {
+        function addSpotToPlanner(id) {
+            const spot = spots.find(s => s.id === id);
+            if(spot && !myCourse.some(item => item.id === id)) {
+                myCourse.push(spot);
+                renderPlannerUI();
+            }
+        }
+
+        function renderPlannerUI() {
+            plannerPathContainer.innerHTML = '';
+            document.getElementById('routeCount').textContent = `${myCourse.length}곳`;
+            
+            if (myCourse.length === 0) {
+                plannerPathContainer.innerHTML = `<p class="text-xs text-slate-500">지도의 핀이나 카드를 선택한 뒤 [코스에 담기]를 눌러 동선을 조합하세요.</p>`;
+                document.getElementById('routeTime').textContent = "총 0분";
+                return;
+            }
+
+            let totalTime = 0;
+            myCourse.forEach((spot, index) => {
+                totalTime += spot.time;
+                const node = document.createElement('div');
+                node.className = "bg-slate-900 text-white text-xs px-3 py-1.5 rounded-xl font-medium";
+                node.innerHTML = `<span>${index + 1}. ${spot.title}</span>`;
+                plannerPathContainer.appendChild(node);
+
+                if (index < myCourse.length - 1) {
+                    const arrow = document.createElement('div');
+                    arrow.className = "text-slate-400 font-bold mx-1";
+                    arrow.innerHTML = "➔";
+                    plannerPathContainer.appendChild(arrow);
+                }
+            });
+            document.getElementById('routeTime').textContent = `총 ${totalTime}분`;
+        }
+
+        function clearPlanner() { myCourse = []; renderPlannerUI(); }
+
+        function sharePlan() {
+            if(myCourse.length === 0) return alert("플래너에 담긴 코스가 없습니다.");
+            let text = "🚶‍♂️ [SSAFY 서울캠 도보 10분 마스터 가이드 코스] 🚶‍♂️\n\n";
+            myCourse.forEach((s, idx) => { text += `${idx+1}. ${s.title}\n   📍 주소: ${s.address}\n\n`; });
+            navigator.clipboard.writeText(text);
+            alert("📋 가이드 계획이 클립보드에 무사히 복사되었습니다!");
+        }
+
+        function setFilter(category) {
+            currentFilter = category;
+            renderCards();
+        }
+
+        function openAddSpotModal() { document.getElementById('addSpotModal').classList.remove('hidden'); }
+        function closeAddSpotModal() { document.getElementById('addSpotModal').classList.add('hidden'); }
+
+        function addNewSpot(e) {
+            e.preventDefault();
+            const title = document.getElementById('newSpotTitle').value.trim();
+            const category = document.getElementById('newSpotCategory').value;
+            const time = parseInt(document.getElementById('newSpotTime').value);
+            const highlight = document.getElementById('newSpotHighlight').value.trim();
+            const description = document.getElementById('newSpotDesc').value.trim();
+
+            const lat = SSAFY_COORD[0] + (Math.random() - 0.5) * 0.004;
+            const lng = SSAFY_COORD[1] + (Math.random() - 0.5) * 0.004;
+
+            const newSpot = {
+                id: `spot_custom_${Date.now()}`, title, category, time, address: "제보 주소 권역",
+                direction: `도보 ${time}분`, highlight, description, lat, lng,
+                image: "https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=800&q=80"
+            };
+
+            let customSpots = JSON.parse(localStorage.getItem('ssafy_custom_spots')) || [];
+            customSpots.push(newSpot);
+            localStorage.setItem('ssafy_custom_spots', JSON.stringify(customSpots));
+
+            closeAddSpotModal();
+            initDataAndRender();
+            if(mainMap) drawMapMarkers();
+            alert(`🎉 장소 "${title}" 제보 등록이 완료되어 하단 전체 스폿 리스트에 연동되었습니다.`);
+        }
+
+        // 지도의 비동기 동적 인젝션 로딩 처리
+        (function() {
             const script = document.createElement('script');
-            script.src = `https://maps.googleapis.com/maps/api/js?key=${DEFAULT_API_KEY}&language=ko&callback=initAllMaps`;
-            script.async = true;
-            script.defer = true;
+            script.src = `https://maps.googleapis.com/maps/api/js?key=${DEFAULT_API_KEY}&language=ko&callback=initMainGoogleMap`;
+            script.async = true; script.defer = true;
             document.head.appendChild(script);
         })();
 
         document.getElementById('themeToggle').onclick = () => document.documentElement.classList.toggle('dark');
+        window.onload = initDataAndRender;
     </script>
 </body>
 </html>
