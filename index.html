@@ -11,7 +11,7 @@
             theme: {
                 extend: {
                     colors: {
-                        primary: { 50: '#f0f7ff', 500: '#1c64d0', 600: '#154eb8' },
+                        primary: { 50: '#f0f7ff', 100: '#e0effe', 200: '#bae0fd', 500: '#1c64d0', 600: '#154eb8', 700: '#0f3a94' },
                         accent: { 500: '#49a1e8' }, darkBg: '#0f172a', darkCard: '#1e293b'
                     }
                 }
@@ -54,8 +54,12 @@
                     <h3 class="text-lg font-bold">싸피 10분 고정밀 로컬 맵</h3>
                     <span class="text-xs px-2.5 py-1 bg-primary-50 text-primary-500 font-medium rounded-full animate-pulse">실시간 연동 중</span>
                 </div>
-                <div id="mainMap" class="w-full h-[400px] rounded-2xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center text-sm text-slate-400">
-                    [구글 지도 엔진 탑재 영역 - 마커 클릭 시 정보 전환]
+                <div id="mainMap" class="w-full h-[400px] rounded-2xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800"></div>
+                
+                <div class="text-[11px] text-slate-400 text-center flex items-center justify-center space-x-4 mt-3">
+                    <span class="flex items-center"><span class="w-3.5 h-3.5 rounded-full bg-indigo-600 border-2 border-white inline-block mr-1"></span>싸피 서울캠</span>
+                    <span class="flex items-center"><span class="w-3.5 h-3.5 rounded-full bg-primary-500 border-2 border-white inline-block mr-1"></span>산책 명소</span>
+                    <span class="flex items-center"><span class="w-3.5 h-3.5 rounded-full bg-amber-500 border-2 border-white inline-block mr-1"></span>추천 맛집</span>
                 </div>
             </div>
             
@@ -66,19 +70,121 @@
                     <p class="text-xs text-slate-400">세부 도로명 주소와 싸피인 전용 로컬 꿀팁 뷰가 여기에 실시간으로 표시됩니다.</p>
                 </div>
                 <div id="activePreviewCard" class="hidden space-y-4">
-                    <span class="px-2.5 py-0.5 bg-primary-50 text-primary-500 text-xs font-semibold rounded-full">추천 스폿</span>
+                    <span id="previewTag" class="px-2.5 py-0.5 bg-primary-50 text-primary-500 text-xs font-semibold rounded-full">카테고리</span>
                     <h4 id="previewTitle" class="text-2xl font-extrabold text-slate-800 dark:text-white">장소명</h4>
+                    <div class="flex items-center text-xs text-indigo-600 font-bold bg-indigo-50 px-3 py-2 rounded-xl">
+                        <span id="previewAddress">📍 주소 데이터</span>
+                    </div>
                     <div class="p-4 bg-slate-50 dark:bg-slate-900 rounded-2xl border text-sm">
                         <p class="font-semibold text-primary-500">💡 싸피 메이트 로컬 꿀팁</p>
-                        <p class="text-slate-600 dark:text-slate-300 mt-1">알고리즘 스트레스를 단번에 날릴 수 있는 최적의 타이밍과 메뉴 밸런스 제공</p>
+                        <p id="previewTip" class="text-slate-600 dark:text-slate-300 mt-1">꿀팁 데이터</p>
                     </div>
-                    <a href="planner.html" class="block w-full text-center py-3 bg-primary-500 text-white rounded-xl text-sm font-bold shadow-lg">🧳 플래너로 이동해서 코스 짜기</a>
+                    <button id="previewAddBtn" class="w-full text-center py-3 bg-primary-500 text-white rounded-xl text-sm font-bold shadow-lg">🎯 코스에 담기</button>
                 </div>
             </div>
         </div>
     </main>
 
     <script>
+        const SSAFY_COORD = [37.5012746, 127.0395857]; // 테헤란로 212 멀티캠퍼스 역삼
+        const DEFAULT_API_KEY = "AIzaSyDc2CKJSsoyceRq08d8aPkdFfewcdTFAHM";
+
+        const DEFAULT_SPOTS = [
+            { id: "spot1", title: "역삼문화공원 & 국기원 산책로", category: "walk", time: 10, address: "서울 강남구 테헤란로7길 32", tip: "공원 내 벤치에 누워 햇볕을 쐬거나 알고리즘 스트레스를 식히기 좋은 최적의 숲길입니다.", lat: 37.502515, lng: 127.030391 },
+            { id: "spot2", title: "지아니스나폴리 역삼본점", category: "food", time: 7, address: "서울 강남구 논현로94길 15", tip: "참나무 화덕에서 바로 구워 쫀득함의 끝을 달리는 나폴리 화덕 피자가 별미입니다.", lat: 37.502240, lng: 127.036620 },
+            { id: "spot3", title: "파브리끄 역삼 GFC점", category: "food", time: 5, address: "서울 강남구 테헤란로 152 GFC 지하1층", tip: "수제 생크림 아인슈페너의 원조집으로 식후 당 충전을 확실히 보장합니다.", lat: 37.500050, lng: 127.036520 }
+        ];
+
+        let mainMap = null;
+        let googleMarkers = [];
+        let selectedSpotId = null;
+
+        const emptyPreviewCard = document.getElementById('emptyPreviewCard');
+        const activePreviewCard = document.getElementById('activePreviewCard');
+        const previewTag = document.getElementById('previewTag');
+        const previewTitle = document.getElementById('previewTitle');
+        const previewAddress = document.getElementById('previewAddress');
+        const previewTip = document.getElementById('previewTip');
+        const previewAddBtn = document.getElementById('previewAddBtn');
+
+        // 지도 초기화 함수
+        function initAllMaps() {
+            if (!window.google) return;
+
+            mainMap = new google.maps.Map(document.getElementById('mainMap'), {
+                center: { lat: SSAFY_COORD[0], lng: SSAFY_COORD[1] },
+                zoom: 16,
+                disableDefaultUI: false
+            });
+
+            // 싸피 중심점 마커 추가
+            new google.maps.Marker({
+                position: { lat: SSAFY_COORD[0], lng: SSAFY_COORD[1] },
+                map: mainMap,
+                title: "싸피 서울캠퍼스",
+                icon: {
+                    path: google.maps.SymbolPath.CIRCLE, scale: 20, fillColor: "#1c64d0", fillOpacity: 1, strokeColor: "#ffffff", strokeWeight: 3
+                },
+                label: { text: "SSAFY", color: "#ffffff", fontSize: "8px", fontWeight: "900" }
+            });
+
+            // 추천 스폿 마커 드로잉
+            renderGoogleMarkers();
+        }
+
+        function renderGoogleMarkers() {
+            DEFAULT_SPOTS.forEach(spot => {
+                const markerColor = spot.category === 'walk' ? '#1c64d0' : '#f59e0b';
+                const marker = new google.maps.Marker({
+                    position: { lat: spot.lat, lng: spot.lng },
+                    map: mainMap,
+                    title: spot.title,
+                    icon: {
+                        path: google.maps.SymbolPath.CIRCLE, scale: 10, fillColor: markerColor, fillOpacity: 0.95, strokeColor: "#ffffff", strokeWeight: 2
+                    }
+                });
+
+                marker.addListener('click', () => { selectSpot(spot.id); });
+                googleMarkers.push(marker);
+            });
+        }
+
+        // 마커 클릭 시 우측 프리뷰 정보 전환
+        function selectSpot(id) {
+            selectedSpotId = id;
+            const spot = DEFAULT_SPOTS.find(s => s.id === id);
+            if (!spot) return;
+
+            emptyPreviewCard.classList.add('hidden');
+            activePreviewCard.classList.remove('hidden');
+
+            previewTag.textContent = spot.category === 'walk' ? '🌲 산책로' : '🍲 맛집';
+            previewTitle.textContent = spot.title;
+            previewAddress.textContent = `📍 주소: ${spot.address} (도보 ${spot.time}분)`;
+            previewTip.textContent = spot.tip;
+
+            previewAddBtn.onclick = () => {
+                // 로컬스토리지 연동용 코드 세팅 (planner.html 장바구니 연동)
+                let course = JSON.parse(localStorage.getItem('ssafy_course')) || [];
+                if(!course.some(item => item.id === spot.id)) {
+                    course.push(spot);
+                    localStorage.setItem('ssafy_course', JSON.stringify(course));
+                    alert(`"${spot.title}"을 투어 계획에 담았습니다! 코스 플래너 페이지에서 확인하세요.`);
+                } else {
+                    alert("이미 등록된 장소입니다.");
+                }
+            };
+        }
+
+        // 비동기로 구글 맵 API 라이브러리 스크립트 강제 로드
+        (function loadGoogleMapsScript() {
+            const script = document.createElement('script');
+            script.src = `https://maps.googleapis.com/maps/api/js?key=${DEFAULT_API_KEY}&language=ko&callback=initAllMaps`;
+            script.async = true;
+            script.defer = true;
+            document.head.appendChild(script);
+        })();
+
         document.getElementById('themeToggle').onclick = () => document.documentElement.classList.toggle('dark');
     </script>
 </body>

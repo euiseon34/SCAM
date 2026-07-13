@@ -25,7 +25,7 @@
                 <a href="planner.html" class="text-primary-500 font-bold">🧳 코스 플래너</a>
                 <a href="report.html" class="text-slate-600 hover:text-primary-500 dark:text-slate-300 transition-colors">➕ 장소 제보</a>
             </nav>
-            <button id="themeToggle" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-sm">🌓</button>
+            <button id="themeToggle" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-sm">🌓 모드 전환</button>
         </div>
     </header>
 
@@ -39,13 +39,10 @@
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
             <div class="lg:col-span-8 bg-white dark:bg-darkCard rounded-2xl p-6 border border-slate-200 dark:border-slate-800 flex flex-col justify-between min-h-[240px]">
                 <div id="plannerPathContainer" class="flex flex-wrap items-center gap-4 py-4">
-                    <div class="bg-slate-100 dark:bg-slate-900 px-4 py-3 rounded-xl border text-xs text-slate-400 w-full text-center">
-                        현재 담긴 장소가 없습니다. 전체 스폿 탭에서 장소를 추가해 주세요!
                     </div>
-                </div>
                 <div class="border-t border-slate-100 dark:border-slate-800 pt-4 flex justify-between items-center text-xs">
-                    <div>총 경유 장소: <span class="font-bold text-primary-500">0곳</span></div>
-                    <div>예상 순수 도보: <span class="font-bold text-primary-500">0분</span></div>
+                    <div>총 경유 장소: <span id="routeCount" class="font-bold text-primary-500">0곳</span></div>
+                    <div>예상 순수 도보: <span id="routeTime" class="font-bold text-primary-500">0분</span></div>
                 </div>
             </div>
 
@@ -54,13 +51,111 @@
                     <h4 class="font-bold text-sm">🧳 싸피 메이트와 공유하기</h4>
                     <p class="text-xs text-slate-400 leading-relaxed">스터디 팀원들과 점심 약속을 잡거나 기분 전환하러 나갈 때 최적의 코스를 완성해 텍스트로 간편하게 공유해 보세요.</p>
                 </div>
-                <button onclick="alert('가이드 계획 텍스트가 클립보드에 복사되었습니다.')" class="w-full py-3 bg-primary-500 text-white rounded-xl text-xs font-bold shadow-md">완성된 일정 텍스트로 내보내기</button>
+                <button onclick="sharePlan()" class="w-full py-3 bg-primary-500 text-white rounded-xl text-xs font-bold shadow-md">완성된 일정 텍스트로 내보내기</button>
+                <button onclick="clearPlanner()" class="w-full py-2 bg-slate-100 dark:bg-slate-800 text-slate-500 text-xs rounded-xl">플래너 비우기</button>
             </div>
         </div>
     </main>
 
     <script>
+        let myCourse = [];
+        const plannerPathContainer = document.getElementById('plannerPathContainer');
+        const routeCountText = document.getElementById('routeCount');
+        const routeTimeText = document.getElementById('routeTime');
+
+        // 로컬스토리지에서 코스 데이터 로드 및 렌더링
+        function loadPlanner() {
+            myCourse = JSON.parse(localStorage.getItem('ssafy_course')) || [];
+            updatePlannerUI();
+        }
+
+        function updatePlannerUI() {
+            plannerPathContainer.innerHTML = '';
+            routeCountText.textContent = `${myCourse.length}곳`;
+
+            if (myCourse.length === 0) {
+                plannerPathContainer.innerHTML = `
+                    <div class="bg-slate-100 dark:bg-slate-900 px-4 py-3 rounded-xl border text-xs text-slate-400 w-full text-center">
+                        현재 담긴 장소가 없습니다. 지도 탐색 페이지에서 [코스에 담기]를 눌러 장소를 추가해 주세요!
+                    </div>`;
+                routeTimeText.textContent = "0분";
+                return;
+            }
+
+            let totalTime = 0;
+            myCourse.forEach((spot, index) => {
+                totalTime += spot.time;
+                
+                const node = document.createElement('div');
+                node.className = "relative flex items-center bg-slate-900 text-white rounded-xl px-4 py-3 shadow-md pr-10 border border-primary-500/30";
+                node.innerHTML = `
+                    <div class="flex items-center space-x-2">
+                        <span class="text-xs font-black bg-primary-500 text-white w-5 h-5 rounded-full flex items-center justify-center">${index + 1}</span>
+                        <div>
+                            <p class="text-xs font-semibold">${spot.category === 'walk' ? '🌲' : '🍲'} ${spot.title}</p>
+                            <p class="text-[10px] text-slate-400">도보 약 ${spot.time}분</p>
+                        </div>
+                    </div>
+                    <button onclick="removeSpot('${spot.id}')" class="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-red-400 p-1">✕</button>
+                `;
+                plannerPathContainer.appendChild(node);
+
+                // 장소 사이사이에 화살표 추가
+                if (index < myCourse.length - 1) {
+                    const arrow = document.createElement('div');
+                    arrow.className = "text-slate-400 font-bold text-sm mx-1";
+                    arrow.innerHTML = "➔";
+                    plannerPathContainer.appendChild(arrow);
+                }
+            });
+
+            routeTimeText.textContent = `${totalTime}분`;
+        }
+
+        // 스폿 삭제 기능
+        function removeSpot(id) {
+            myCourse = myCourse.filter(spot => spot.id !== id);
+            localStorage.setItem('ssafy_course', JSON.stringify(myCourse));
+            updatePlannerUI();
+        }
+
+        // 전체 초기화 기능
+        function clearPlanner() {
+            if(confirm("플래너를 비우시겠습니까?")) {
+                myCourse = [];
+                localStorage.removeItem('ssafy_course');
+                updatePlannerUI();
+            }
+        }
+
+        // 공유 텍스트 빌더 및 복사 기능
+        function sharePlan() {
+            if(myCourse.length === 0) {
+                alert("코스에 담긴 장소가 없습니다.");
+                return;
+            }
+
+            let text = "🚶‍♂️ [싸피(SSAFY) 서울캠퍼스 도보 10분 추천 코스] 🚶‍♂️\n\n";
+            myCourse.forEach((spot, index) => {
+                text += `${index + 1}. ${spot.title} (${spot.category === 'walk' ? '산책' : '맛집'})\n`;
+                text += `   📍 주소: ${spot.address} (도보 ${spot.time}분)\n\n`;
+            });
+            text += `✨ 싸피 메이트와 함께 리프레시하러 떠나보세요!`;
+
+            const tempInput = document.createElement('textarea');
+            tempInput.value = text;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+
+            alert("📋 가이드 코스 일정 텍스트가 클립보드에 무사히 복사되었습니다! 카톡이나 디스코드에 공유해 보세요.");
+        }
+
         document.getElementById('themeToggle').onclick = () => document.documentElement.classList.toggle('dark');
+        
+        // 페이지 로드 시 실행
+        window.onload = loadPlanner;
     </script>
 </body>
 </html>
